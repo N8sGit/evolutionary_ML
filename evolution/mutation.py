@@ -17,59 +17,90 @@ def mutate_model(model, mutation_rate=0.1):
     return mutated_model
 
 def mutate_layers(model):
+    # Save a copy of the original layer specs before mutation for reversion if needed
+    original_layer_specs = copy.deepcopy(model.layer_specs)
+    
     # Decide whether to add or remove a layer
     if random.random() < 0.5 and len(model.layer_specs) > 4:
         # Remove a hidden layer
         linear_indices = [i for i, (layer_type, _) in enumerate(model.layer_specs) if layer_type == 'Linear']
-        # Exclude first and last Linear layers (input and output layers)
-        hidden_linear_indices = linear_indices[1:-1]
+        hidden_linear_indices = linear_indices[1:-1]  # Exclude input and output layers
         
         if hidden_linear_indices:
             remove_idx = random.choice(hidden_linear_indices)
             # Remove the Linear layer and its associated activation and dropout layers
-            del model.layer_specs[remove_idx:remove_idx+3]
+            del model.layer_specs[remove_idx:remove_idx + 3]
             
             # Adjust the in_features of the next Linear layer (if any)
             prev_linear_idx = remove_idx - 1
             next_linear_idx = remove_idx
             if next_linear_idx < len(model.layer_specs) and model.layer_specs[next_linear_idx][0] == 'Linear':
-                # Ensure we're adjusting a valid Linear layer
-                if 'out_features' in model.layer_specs[prev_linear_idx][1]:
-                    prev_out_features = model.layer_specs[prev_linear_idx][1]['out_features']
+                # Safely access 'out_features' for the previous layer
+                prev_out_features = model.layer_specs[prev_linear_idx][1].get('out_features', None)
+                if prev_out_features is not None:
                     model.layer_specs[next_linear_idx][1]['in_features'] = prev_out_features
-            
+
             # Rebuild the model and verify dimensions
             model.build_layers()
-            model.verify_dimensions()
-    
+            
+            # Handle dimension mismatch errors
+            if not verify_and_handle(model, original_layer_specs):
+                return model  # If reversion occurred, return the reverted model
+
     else:
         # Add a hidden layer
         linear_indices = [i for i, (layer_type, _) in enumerate(model.layer_specs) if layer_type == 'Linear']
-        # Choose a position between existing Linear layers
         if len(linear_indices) > 2:
             insert_idx = random.choice(linear_indices[1:-1])  # Exclude input and output layers
-            prev_out_features = model.layer_specs[insert_idx - 1][1]['out_features']
-            new_hidden_size = random.choice([64, 128, 256])
+            prev_out_features = model.layer_specs[insert_idx - 1][1].get('out_features', None)
             
-            # Create new layer specs for the new hidden layer
-            new_layer_specs = [
-                ('Linear', {'in_features': prev_out_features, 'out_features': new_hidden_size}),
-                ('ReLU', {}),
-                ('Dropout', {'p': random.choice([0.3, 0.5, 0.7])}),
-            ]
-            
-            # Adjust the in_features of the next Linear layer
-            next_linear_idx = insert_idx
-            if model.layer_specs[next_linear_idx][0] == 'Linear':
-                model.layer_specs[next_linear_idx][1]['in_features'] = new_hidden_size
-            
-            # Insert the new layer specs at the chosen position
-            model.layer_specs[insert_idx:insert_idx] = new_layer_specs
-            
-            # Rebuild the model and verify dimensions
-            model.build_layers()
-            model.verify_dimensions()
+            if prev_out_features is not None:
+                new_hidden_size = random.choice([64, 128, 256])
+                
+                # Create new layer specs
+                new_layer_specs = [
+                    ('Linear', {'in_features': prev_out_features, 'out_features': new_hidden_size}),
+                    ('ReLU', {}),
+                    ('Dropout', {'p': random.choice([0.3, 0.5, 0.7])}),
+                ]
+                
+                # Adjust the in_features of the next Linear layer
+                next_linear_idx = insert_idx
+                if model.layer_specs[next_linear_idx][0] == 'Linear':
+                    model.layer_specs[next_linear_idx][1]['in_features'] = new_hidden_size
+
+                # Insert the new layers
+                model.layer_specs[insert_idx:insert_idx] = new_layer_specs
+                
+                # Rebuild the model and verify dimensions
+                model.build_layers()
+
+                # Handle dimension mismatch errors
+                if not verify_and_handle(model, original_layer_specs):
+                    return model  # If reversion occurred, return the reverted model
     
+    return model
+
+def verify_and_handle(model, original_layer_specs):
+    """Verifies the dimensions of the model and reverts the mutation if an error is encountered."""
+    try:
+        model.verify_dimensions()
+        return True
+    except ValueError as e:
+        print(f"Dimension mismatch detected: {e}")
+        # Revert the model to the original state
+        model.layer_specs = original_layer_specs
+        model.build_layers()
+        print("Reverted mutation due to dimension mismatch.")
+        return False
+
+def ensure_layer_compatibility(model):
+    """Ensures that all subsequent layers have compatible in_features and out_features."""
+    for idx in range(1, len(model.layer_specs)):
+        if model.layer_specs[idx][0] == 'Linear' and model.layer_specs[idx - 1][0] == 'Linear':
+            prev_out_features = model.layer_specs[idx - 1][1]['out_features']
+            if model.layer_specs[idx][1]['in_features'] != prev_out_features:
+                model.layer_specs[idx][1]['in_features'] = prev_out_features
     return model
 
 def mutate_hyperparameters(model, mutation_rate=0.1):
