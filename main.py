@@ -5,7 +5,7 @@ from comparison import compare_models
 
 if __name__ == "__main__":
     # Run the evolutionary algorithm
-    best_model, best_fitness = evolutionary_algorithm(pop_size=10, generations=3, base_mutation_rate=0.1)
+    best_model, best_fitness = evolutionary_algorithm(pop_size=20, generations=3, base_mutation_rate=0.1)
     print(f"Best model found by evolutionary algorithm has fitness: {best_fitness}")
     
     # Save the best model from evolutionary algorithm
