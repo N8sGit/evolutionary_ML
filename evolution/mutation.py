@@ -40,8 +40,15 @@ def mutate_layers(model):
                 if prev_out_features is not None:
                     model.layer_specs[next_linear_idx][1]['in_features'] = prev_out_features
 
-            # Rebuild the model and verify dimensions
-            model.build_layers()
+            # Rebuild the model and verify dimensions with error handling
+            try:
+                model.build_layers()
+            except Exception as e:
+                print(f"Error during layer construction: {e}")
+                # Revert the model to the original state
+                model.layer_specs = original_layer_specs
+                model.build_layers()
+                print("Reverted mutation due to error during layer construction.")
             
             # Handle dimension mismatch errors
             if not verify_and_handle(model, original_layer_specs):
@@ -72,8 +79,15 @@ def mutate_layers(model):
                 # Insert the new layers
                 model.layer_specs[insert_idx:insert_idx] = new_layer_specs
                 
-                # Rebuild the model and verify dimensions
-                model.build_layers()
+                # Rebuild the model and verify dimensions with error handling
+                try:
+                    model.build_layers()
+                except Exception as e:
+                    print(f"Error during layer construction: {e}")
+                    # Revert the model to the original state
+                    model.layer_specs = original_layer_specs
+                    model.build_layers()
+                    print("Reverted mutation due to error during layer construction.")
 
                 # Handle dimension mismatch errors
                 if not verify_and_handle(model, original_layer_specs):
@@ -105,10 +119,16 @@ def ensure_layer_compatibility(model):
 
 def mutate_hyperparameters(model, mutation_rate=0.1):
     if random.random() < mutation_rate:
-        # Randomly choose a new dropout rate
-        new_dropout_rate = random.choice([0.3, 0.5, 0.7])
+        # Randomly mutate hyperparameters like learning rate, dropout, and activation function
+        new_dropout_rate = random.uniform(0.1, 0.7)
         model.dropout = nn.Dropout(new_dropout_rate)
         model.dropout.p = new_dropout_rate  # Ensure the dropout rate is updated
+
+        if hasattr(model, 'learning_rate'):
+            model.learning_rate *= random.uniform(0.8, 1.2)  # Mutate learning rate slightly
+
+        if hasattr(model, 'activation_function'):
+            model.activation_function = random.choice([nn.ReLU(), nn.Sigmoid(), nn.Tanh()])  # Change activation function
     return model
 
 def mutate_architecture(model, mutation_rate=0.1):
@@ -119,8 +139,13 @@ def mutate_architecture(model, mutation_rate=0.1):
             model.num_conv_layers -= 1
         else:
             model.num_conv_layers += 1
-        # Update the model architecture accordingly
+        # Update the model architecture while preserving weights where possible
+        old_state_dict = model.state_dict()
         model.__init__(num_conv_layers=model.num_conv_layers, num_filters=model.num_filters)
+        try:
+            model.load_state_dict(old_state_dict, strict=False)
+        except Exception as e:
+            print(f"Warning: Failed to fully load the previous state dict: {e}")
     return model
 
 def adaptive_mutation_rate(fitness_history, base_rate=0.1):
@@ -128,7 +153,10 @@ def adaptive_mutation_rate(fitness_history, base_rate=0.1):
     if len(fitness_history) < 2:
         return base_rate
     improvement = fitness_history[-1] - fitness_history[-2]
+    # Dynamically adjust mutation rate based on fitness trend
     if improvement < 0.001:
-        return min(1.0, base_rate * 1.5)  # Increase mutation rate
+        return min(1.0, base_rate * (1.5 + random.uniform(0, 0.5)))  # Increase mutation rate with added randomness
+    elif improvement < 0.01:
+        return min(1.0, base_rate * 1.2)  # Slightly increase mutation rate
     else:
-        return max(0.01, base_rate * 0.7)  # Decrease mutation rate
+        return max(0.01, base_rate * (0.7 - random.uniform(0, 0.2)))  # Decrease mutation rate with added randomness

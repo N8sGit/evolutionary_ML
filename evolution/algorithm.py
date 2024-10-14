@@ -56,16 +56,8 @@ def evolutionary_algorithm(pop_size=10, generations=5, base_mutation_rate=0.1):
         num_parents = pop_size // 2
         parents = select_parents(population, fitnesses, num_parents)
         
-        # Generate offspring through crossover and mutation
-        offspring = []
-        while len(offspring) < pop_size - num_parents:
-            if len(parents) > 1:
-                parent1, parent2 = random.sample(parents, 2)
-            else:
-                parent1 = parent2 = parents[0]
-            child = crossover_models(parent1, parent2)
-            child = mutate_model(child, mutation_rate)
-            offspring.append(child)
+        # Generate offspring through crossover and mutation using list comprehension
+        offspring = [mutate_model(crossover_models(*random.sample(parents, 2) if len(parents) > 1 else (parents[0], parents[0])), mutation_rate) for _ in range(pop_size - num_parents)]
         
         # Create new population
         population = parents + offspring

@@ -1,4 +1,4 @@
-from model import SimpleNN, FlexibleNN
+from model import FlexibleNN
 import random
 import copy
 

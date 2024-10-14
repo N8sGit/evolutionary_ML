@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from model import SimpleNN, FlexibleNN
+from model import FlexibleNN
 from data import val_loader, train_loader
 from evolution.fitness import evaluate_fitness
 from evolution.population import create_random_architecture
