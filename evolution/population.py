@@ -2,6 +2,7 @@ import random
 import torch
 import torch.nn as nn
 from model import FlexibleNN
+from data import input_size
 
 
 def initialize_population(pop_size):
@@ -9,7 +10,7 @@ def initialize_population(pop_size):
     for _ in range(pop_size):
         # Create random architecture
         layer_specs = create_random_architecture()
-        model = FlexibleNN(layer_specs=layer_specs)
+        model = FlexibleNN(layer_specs=layer_specs, input_size=input_size)
         population.append(model)
     return population
 

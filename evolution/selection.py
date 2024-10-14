@@ -1,6 +1,7 @@
 from model import FlexibleNN
 import random
 import copy
+from data import input_size
 
 def select_parents(population, fitnesses, num_parents, tournament_size=3):
     """
@@ -69,7 +70,7 @@ def crossover_models(parent1, parent2):
     if child_layer_specs[-1][0] == 'Linear':
         child_layer_specs[-1][1]['out_features'] = 10  # Number of classes
     # Create child model
-    child = FlexibleNN(layer_specs=child_layer_specs)
+    child = FlexibleNN(layer_specs=child_layer_specs, input_size=input_size)
     # Verify dimensions
     child.verify_dimensions()
     return child
