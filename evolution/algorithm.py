@@ -21,16 +21,16 @@ def evolutionary_algorithm(pop_size=10, generations=5, base_mutation_rate=0.1):
     for gen in range(generations):
         print(f"\nGeneration {gen + 1}")
         fitnesses = []
-        accuracies = []
+        f1s = []
         avg_losses = []
         
         # Train and evaluate each model in the population
         for i, model in enumerate(population):
             print(f"Training Model {i + 1}/{len(population)}")
             train_model(model, device, train_loader, epochs=1)
-            fitness, accuracy, avg_loss = evaluate_fitness(model, device, val_loader, population)
+            fitness, f1, avg_loss = evaluate_fitness(model, device, val_loader, population)
             fitnesses.append(fitness)
-            accuracies.append(accuracy)
+            f1s.append(f1)
             avg_losses.append(avg_loss)
             print(f"Model {i + 1} - Fitness: {fitness:.4f}, Accuracy: {accuracy:.4f}, Loss: {avg_loss:.4f}")
         
