@@ -2,10 +2,40 @@ from model import FlexibleNN
 import random
 import copy
 
-def select_parents(population, fitnesses, num_parents):
-    parents = [model for _, model in sorted(zip(fitnesses, population), key=lambda x: x[0], reverse=True)]
-    return parents[:num_parents]
+def select_parents(population, fitnesses, num_parents, tournament_size=3):
+    """
+    Selects parents from the population using tournament selection.
 
+    Parameters:
+    - population (list): The list of models in the population.
+    - fitnesses (list): The fitness scores corresponding to the population.
+    - num_parents (int): The number of parents to select.
+    - tournament_size (int): The number of candidates to compete in each tournament.
+
+    Returns:
+    - selected_parents (list): The selected parents from the population.
+    """
+    selected_parents = []
+    population_fitness = list(zip(population, fitnesses))
+    
+    while len(selected_parents) < num_parents:
+        # Adjust the tournament size if the remaining population is smaller than the tournament size
+        if tournament_size > len(population_fitness):
+            tournament_size = len(population_fitness)
+        
+        # Select random individuals from the population for the tournament
+        tournament = random.sample(population_fitness, tournament_size)
+        
+        # Choose the individual with the highest fitness from the tournament
+        winner = max(tournament, key=lambda x: x[1])[0]
+        
+        # Add the winner to the selected parents
+        selected_parents.append(winner)
+        
+        # Remove the winner from the population to avoid selecting the same individual again
+        population_fitness.remove((winner, max(tournament, key=lambda x: x[1])[1]))
+
+    return selected_parents
 
 def crossover_models(parent1, parent2):
     # Perform crossover on layer_specs
