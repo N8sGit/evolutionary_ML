@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from model import FlexibleNN
-from data import val_loader, train_loader
+from data import val_loader, train_loader, input_size
 from evolution.fitness import evaluate_fitness
 from evolution.population import create_random_architecture
 
@@ -64,7 +64,7 @@ def train_model(model, device, train_loader, epochs=1, learning_rate=0.01, optim
 def train_standard_model():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     layer_list = create_random_architecture()
-    model = FlexibleNN(layer_specs=layer_list)
+    model = FlexibleNN(layer_specs=layer_list, input_size=input_size)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(model.parameters(), lr=0.01, weight_decay=1e-4)
     num_epochs = 5
