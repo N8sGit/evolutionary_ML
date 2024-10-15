@@ -5,7 +5,7 @@ Initial results have proven promising, but more work will have to go into optimi
 
 ### What is neuro-evolution? 
 
-Neuro-evolution is a heterodox approach to machine learning and artificial neural network development which incorporates mechanisms from genetic programming. The field has been around since the early 2000s, following K. Stanley R. Miikkulainen's work on NeuroEvolution of Augmenting Topologies [(NEAT)](https://nn.cs.utexas.edu/downloads/papers/stanley.ec02.pdf)
+Neuro-evolution is a heterodox approach to machine learning and artificial neural network development which incorporates mechanisms from genetic programming. The field has been around at least since the early 2000s, following K. Stanley and R. Miikkulainen's work on NeuroEvolution of Augmenting Topologies [(NEAT)](https://nn.cs.utexas.edu/downloads/papers/stanley.ec02.pdf)
 
 One of the most appealing features of these methods is that it allows one to explore all facets of the relevant search space at once. One can mutate hyperparameters, layers, and activation functions simultaneously, which combines many of the different efforts one has to perform individually into one. 
 
@@ -19,7 +19,9 @@ Initially experiments have shown that the algorithm will consistently outperform
 
 Here I just wanted to share my initial findings and the codebase in their current, rough shape. I may go back to the drawingboard anew and reapply my learnings afresh. 
 
-Currently, the program works reasonably well for MNIST but will tank on CIFAR10. In retrospect I flew a little close to the sun with the latter and will need to revisit it. 
+Currently, the program works reasonably well for MNIST but will tank on CIFAR10. In retrospect I flew a little close to the sun with the latter and will need to revisit it. You need to get into the weeds with configuring your resources if you want this algorithm to scale. 
+
+This project is just my first attempts at educating myself about neuro-evolution and shouldn't be taken that seriously.
 
 ### Running the project
 Assuming you have all the regular python tools for machine learning development setup, in the root directory in the terminal run:  
