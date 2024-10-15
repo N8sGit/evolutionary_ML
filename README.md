@@ -19,7 +19,7 @@ Initially experiments have shown that the algorithm will consistently outperform
 
 Here I just wanted to share my initial findings and the codebase in their current, rough shape. I may go back to the drawingboard anew and reapply my learnings afresh. 
 
-Currently, the program works reasonably well for MNIST but will tank on CIFAR10. In retrospect I flew a little close to the sun with the latter and will need to revisit it. You need to get into the weeds with configuring your resources if you want this algorithm to scale. 
+Currently, the program works reasonably well for MNIST but will tank on CIFAR10. In retrospect I flew a little close to the sun with the latter and will need to revisit it. You need to get into the weeds with how you allocate your resources if you want this algorithm to scale. 
 
 This project is just my first attempts at educating myself about neuro-evolution and shouldn't be taken that seriously.
 
