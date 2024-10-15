@@ -1,4 +1,4 @@
-# evolutionary_fine_tuning
+# evolutionary_machine_learning
 Machine learning experiment that uses evolutionary algorithms instead of traditional methods for model selection.
 
 Initial results have proven promising, but more work will have to go into optimization and performance to actually put it ahead as a viable attractive replacement for traditional machine learning development methods. 
