@@ -103,7 +103,7 @@ def evolutionary_algorithm(pop_size=10, generations=5, base_mutation_rate=0.1):
             new_model = initialize_population(1)[0]
             # Add the new model to the population and fitness dictionaries
             population.append(new_model)
-            fitness_dict[id(new_model)] = 0.0  # Initial fitness
+            fitness_dict[id(new_model)] = 0.0
             adjusted_fitness_dict[id(new_model)] = 0.0
             new_species.append([new_model])
             print("A new species has been introduced.")

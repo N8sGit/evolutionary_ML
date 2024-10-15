@@ -48,6 +48,5 @@ def is_similar(model1, model2, threshold):
     diff = 0.0
 
     for key in params1.keys():
-        # No need to check for key existence or size mismatch
         diff += torch.norm(params1[key] - params2[key])
     return diff < threshold

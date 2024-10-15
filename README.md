@@ -5,7 +5,7 @@ Initial results have proven promising, but more work will have to go into optimi
 
 ### What is neuro-evolution? 
 
-Neuro-evolution is a heterodox approach to machine learning and artificial neural network development which incorporates mechanisms from genetic programming. The field has been around at least since the early 2000s, following K. Stanley and R. Miikkulainen's work on NeuroEvolution of Augmenting Topologies [(NEAT)](https://nn.cs.utexas.edu/downloads/papers/stanley.ec02.pdf)
+Neuro-evolution is a heterodox approach to machine learning and artificial neural network development which incorporates mechanisms from genetic programming. The field has been around at least since the early 2000s, following K. Stanley and R. Miikkulainen's work on NeuroEvolution of Augmenting Topologies [(NEAT)](https://nn.cs.utexas.edu/downloads/papers/stanley.ec02.pdf).
 
 One of the most appealing features of these methods is that it allows one to explore all facets of the relevant search space at once. One can mutate hyperparameters, layers, and activation functions simultaneously, which combines many of the different efforts one has to perform individually into one. 
 
@@ -13,7 +13,7 @@ The upfront time and resource expense is large, but the argument can be made tha
 
 The magic of evolutionary discovery algorithms is that all you must do is hand it the right set of primtive combinitorial components (architecture elements), give it a general idea of what differentiates better from worse, and set it loose as it then explores the space of architectural possibilities until something sticks. 
 
-I'm nearly convinced if we could land on the right recipie we wouldn't do R&D any other way.
+I'm nearly convinced if we could land on the right recipie we wouldn't do R&D any other way. The main challenge seems be selecting the right assumptions about what areas of model space ought to be explored and making sure the right fitness function and parameters have been chosen. We can't evolve the code we wrote alongside the code we generate.
 
 Initially experiments have shown that the algorithm will consistently outperform a regular model for the MNIST dataset if given enough time, and will do the same for an unoptimized base model for CIFAR10 (although much needs to be done before it can take on such a large and complex dataset comfortably). 
 
