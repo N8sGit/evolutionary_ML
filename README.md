@@ -27,4 +27,6 @@ This project is just my first attempts at educating myself about neuro-evolution
 Assuming you have all the regular python tools for machine learning development setup, in the root directory in the terminal run:  
 ```pip install requirements.txt```
 
+To run the main loop : ```python main.py```
+
 You can set the flag for which dataset you want it to work on in ```data.py```. However it's recommended to keep it to MNIST for the time being.  
