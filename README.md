@@ -5,7 +5,7 @@ Initial results have proven promising, but more work will have to go into optimi
 
 ### What is neuro-evolution? 
 
-Neuro-evolution is a heterodox approach to machine learning and artificial neural network development which incorporates mechanisms from genetic programming. The field has been around at least since the early 2000s, following K. Stanley and R. Miikkulainen's work on NeuroEvolution of Augmenting Topologies [(NEAT)](https://nn.cs.utexas.edu/downloads/papers/stanley.ec02.pdf).
+Neuro-evolution is a heterodox approach to machine learning and artificial neural network development which incorporates mechanisms from genetic programming. The field has been around at least since the early 1990s, but really came into its own following K. Stanley and R. Miikkulainen's work on NeuroEvolution of Augmenting Topologies [(NEAT)](https://nn.cs.utexas.edu/downloads/papers/stanley.ec02.pdf).
 
 One of the most appealing features of these methods is that it allows one to explore all facets of the relevant search space at once. One can mutate hyperparameters, layers, and activation functions simultaneously, which combines many of the different efforts one has to perform individually into one. 
 
